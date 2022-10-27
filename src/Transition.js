@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, {flushSync} from 'react-dom';
 
 import config from './config';
 import { timeoutsShape } from './utils/PropTypes';
@@ -287,12 +287,32 @@ class Transition extends React.Component {
     }
   }
 
+  // safeSetState(nextState, callback) {
+  //   // This shouldn't be necessary, but there are weird race conditions with
+  //   // setState callbacks and unmounting in testing, so always make sure that
+  //   // we can cancel any pending setState callbacks after we unmount.
+  //   callback = this.setNextCallback(callback);
+  //   this.setState(nextState, callback);
+  // }
+
+  /**
+   * Prevent React 18 from batching updates.
+   * https://github.com/reactjs/react-transition-group/issues/816#issuecomment-1175783666
+   *
+   * @param {object} nextState Next state object.
+   * @param {function} callback Post-set callback.
+   */
   safeSetState(nextState, callback) {
-    // This shouldn't be necessary, but there are weird race conditions with
-    // setState callbacks and unmounting in testing, so always make sure that
-    // we can cancel any pending setState callbacks after we unmount.
-    callback = this.setNextCallback(callback);
-    this.setState(nextState, callback);
+    // console.log(`Transition.js setStateConditionalFlushSync nextState=${JSON.stringify(nextState)}`)
+    if (nextState?.status !== "exited") {
+      // console.log(`Transition.js setStateConditionalFlushSync *imperative* nextState=${JSON.stringify(nextState)}`)
+      this.setState(nextState, callback)
+      return
+    }
+    flushSync(() => {
+      // console.log(`Transition.js setStateConditionalFlushSync *flushSync* nextState=${JSON.stringify(nextState)}`)
+      this.setState(nextState, callback)
+    })
   }
 
   setNextCallback(callback) {
