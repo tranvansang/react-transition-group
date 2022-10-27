@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import StoryFixture from './StoryFixture';
-import Fade from './transitions/Fade';
+import Fade from './transitions/CSSFadeForTransitionGroup';
 import Scale from './transitions/Scale';
 
 function FadeAndScale(props) {
@@ -27,7 +27,7 @@ function Example() {
   const [showNested, setShowNested] = useState(false);
 
   return (
-    <StoryFixture description="nested Transtions">
+    <StoryFixture description="nested Transitions">
       <h3>Nested Animations</h3>
       <button
         onClick={() => {

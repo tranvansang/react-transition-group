@@ -6,6 +6,7 @@ import React from 'react';
 
 import Transition from './Transition';
 import { classNamesShape } from './utils/PropTypes';
+import { forceReflow } from './utils/reflow';
 
 const addClass = (node, classes) =>
   node && classes && classes.split(' ').forEach((c) => addOneClass(node, c));
@@ -28,10 +29,11 @@ const removeClass = (node, classes) =>
  * ```jsx
  * function App() {
  *   const [inProp, setInProp] = useState(false);
+ *   const nodeRef = useRef(null);
  *   return (
  *     <div>
- *       <CSSTransition in={inProp} timeout={200} classNames="my-node">
- *         <div>
+ *       <CSSTransition nodeRef={nodeRef} in={inProp} timeout={200} classNames="my-node">
+ *         <div ref={nodeRef}>
  *           {"I'll receive my-node-* classes"}
  *         </div>
  *       </CSSTransition>
@@ -194,8 +196,7 @@ class CSSTransition extends React.Component {
     // This is to force a repaint,
     // which is necessary in order to transition styles when adding a class name.
     if (phase === 'active') {
-      /* eslint-disable no-unused-expressions */
-      node && node.scrollTop;
+      if (node) forceReflow(node);
     }
 
     if (className) {
@@ -318,7 +319,7 @@ CSSTransition.propTypes = {
    * A `<Transition>` callback fired immediately after the 'enter' or 'appear' class is
    * applied.
    *
-   * **Note**: when `nodeRef` prop is passed, `node` is not passed.
+   * **Note**: when `nodeRef` prop is passed, `node` is not passed, so `isAppearing` is being passed as the first argument.
    *
    * @type Function(node: HtmlElement, isAppearing: bool)
    */
@@ -328,7 +329,7 @@ CSSTransition.propTypes = {
    * A `<Transition>` callback fired immediately after the 'enter-active' or
    * 'appear-active' class is applied.
    *
-   * **Note**: when `nodeRef` prop is passed, `node` is not passed.
+   * **Note**: when `nodeRef` prop is passed, `node` is not passed, so `isAppearing` is being passed as the first argument.
    *
    * @type Function(node: HtmlElement, isAppearing: bool)
    */
@@ -338,7 +339,7 @@ CSSTransition.propTypes = {
    * A `<Transition>` callback fired immediately after the 'enter' or
    * 'appear' classes are **removed** and the `done` class is added to the DOM node.
    *
-   * **Note**: when `nodeRef` prop is passed, `node` is not passed.
+   * **Note**: when `nodeRef` prop is passed, `node` is not passed, so `isAppearing` is being passed as the first argument.
    *
    * @type Function(node: HtmlElement, isAppearing: bool)
    */
