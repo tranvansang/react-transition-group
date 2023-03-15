@@ -1,5 +1,9 @@
 # react-transition-group [![npm][npm-badge]][npm]
 
+# react-transition-group@4.4.5 + react-18 flashing effect fix
+- [issue](https://github.com/reactjs/react-transition-group/issues/816)
+- [fix commit](https://github.com/reactjs/react-transition-group/commit/c20af7cd51ce9217a7ebd7ebd9b70e242960d7b9)
+
 > **ATTENTION!** To address many issues that have come up over the years, the API in v2 and above is not backwards compatible with the original [`React addon (v1-stable)`](https://github.com/reactjs/react-transition-group/tree/v1-stable).
 >
 > **For a drop-in replacement for `react-addons-transition-group` and `react-addons-css-transition-group`, use the v1 release. Documentation and code for that release are available on the [`v1-stable`](https://github.com/reactjs/react-transition-group/tree/v1-stable) branch.**
